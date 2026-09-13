@@ -431,3 +431,22 @@ document.querySelectorAll('.npc-name').forEach(input => {
 });
 
 loadState();
+
+// TEMPORARY DEBUG — remove when done
+const debugEl = document.createElement('div');
+debugEl.style.cssText = `
+  position: fixed; bottom: 10px; left: 10px; z-index: 9999;
+  background: rgba(0,0,0,0.8); color: lime; font-size: 13px;
+  font-family: monospace; padding: 6px 10px; border-radius: 4px;
+`;
+document.body.appendChild(debugEl);
+
+function updateDebug() {
+  const imgEl = document.getElementById('bg');
+  debugEl.textContent =
+    `overlay px width: ${overlay.offsetWidth} | ` +
+    `img natural: ${imgEl.naturalWidth}×${imgEl.naturalHeight} | ` +
+    `scale: ${(overlay.offsetWidth / imgEl.naturalWidth).toFixed(4)}`;
+}
+updateDebug();
+window.addEventListener('resize', updateDebug);
