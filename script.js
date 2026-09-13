@@ -43,13 +43,13 @@ const NAME_CONFIG = {
 
 // ── DICE CONFIG ───────────────────────────────────────────────
 const DICE_CONFIG = {
-  POOL_BOX:       { top: 721, left: 270,   w: 48, h: 48 },
-  POOL_BTN_MINUS: { top: 717, left: 190,   w: 36, h: 48 },
-  POOL_BTN_PLUS:  { top: 717, left: 370,   w: 36, h: 48 },
+  POOL_BOX:       { top: 721, left: 270,   w: 48,  h: 48 },
+  POOL_BTN_MINUS: { top: 717, left: 190,   w: 36,  h: 48 },
+  POOL_BTN_PLUS:  { top: 717, left: 370,   w: 36,  h: 48 },
 
-  DIFF_BOX:       { top: 720, left: 482,   w: 48, h: 48 },
-  DIFF_BTN_UP:    { top: 710, left: 540,   w: 26, h: 14 },
-  DIFF_BTN_DOWN:  { top: 751, left: 540,   w: 26, h: 14 },
+  DIFF_BOX:       { top: 720, left: 482,   w: 48,  h: 48 },
+  DIFF_BTN_UP:    { top: 710, left: 540,   w: 26,  h: 14 },
+  DIFF_BTN_DOWN:  { top: 751, left: 540,   w: 26,  h: 14 },
 
   ROLL_BTN:       { top: 808, left: 370,   w: 200, h: 44 },
   RESULT_BTN:     { top: 805, left: 150.5, w: 200, h: 49 },
@@ -73,38 +73,38 @@ const WEAPON_CONFIG = {
     {
       id: 'knife',   label: 'Knife',
       attackDice: 4, damageDice: 3,
-      attackBtn: { top: 574, left:  34   },
-      damageBtn: { top: 574, left:  84   },
+      attackBtn: { top: 574, left:  34    },
+      damageBtn: { top: 574, left:  84    },
     },
     {
       id: 'pistol',  label: 'Pistol',
       attackDice: 5, damageDice: 4,
-      attackBtn: { top: 574, left:  143  },
-      damageBtn: { top: 574, left:  192  },
+      attackBtn: { top: 574, left:  143   },
+      damageBtn: { top: 574, left:  192   },
     },
     {
       id: 'rifle',   label: 'Rifle',
       attackDice: 5, damageDice: 6,
       attackBtn: { top: 574, left:  251.5 },
-      damageBtn: { top: 574, left:  301  },
+      damageBtn: { top: 574, left:  301   },
     },
     {
       id: 'smg',     label: 'SMG',
       attackDice: 5, damageDice: 5,
-      attackBtn: { top: 574, left:  360  },
-      damageBtn: { top: 574, left:  410  },
+      attackBtn: { top: 574, left:  360   },
+      damageBtn: { top: 574, left:  410   },
     },
     {
       id: 'shotgun', label: 'Shotgun',
       attackDice: 5, damageDice: 7,
-      attackBtn: { top: 574, left:  469  },
-      damageBtn: { top: 574, left:  519  },
+      attackBtn: { top: 574, left:  469   },
+      damageBtn: { top: 574, left:  519   },
     },
     {
       id: 'baton',   label: 'Baton',
       attackDice: 4, damageDice: 4,
       attackBtn: { top: 574, left:  578.5 },
-      damageBtn: { top: 574, left:  628  },
+      damageBtn: { top: 574, left:  628   },
     },
   ],
 };
@@ -127,9 +127,21 @@ const pendingBonus = {};
 WEAPON_CONFIG.WEAPONS.forEach(w => { pendingBonus[w.id] = 0; });
 
 // ─────────────────────────────────────────────────────────────
-//  OVERLAY — get reference ONCE, then build everything into it
+//  OVERLAY + SCALE ROOT
 // ─────────────────────────────────────────────────────────────
 const overlay = document.getElementById('overlay');
+
+const scaleRoot = document.createElement('div');
+scaleRoot.id = 'scale-root';
+overlay.appendChild(scaleRoot);  // scaleRoot goes INTO overlay, not into itself
+
+function applyScale() {
+  const scale = overlay.offsetWidth / 1488;  // 1488 = natural PNG width in px
+  scaleRoot.style.transform = `scale(${scale})`;
+}
+
+applyScale();
+window.addEventListener('resize', applyScale);
 
 // ── Helper ────────────────────────────────────────────────────
 function makeEl(tag, cls, box) {
@@ -173,7 +185,7 @@ CONFIG.NPC_GROUPS.forEach(npc => {
     group.appendChild(box);
   }
 
-  overlay.appendChild(group);
+  scaleRoot.appendChild(group);
 });
 
 // ─────────────────────────────────────────────────────────────
@@ -189,7 +201,7 @@ NAME_CONFIG.NAME_FIELDS.forEach(field => {
   input.style.left   = field.left   + 'px';
   input.style.width  = NAME_CONFIG.BOX_W + 'px';
   input.style.height = NAME_CONFIG.BOX_H + 'px';
-  overlay.appendChild(input);
+  scaleRoot.appendChild(input);
 });
 
 // ─────────────────────────────────────────────────────────────
@@ -197,7 +209,7 @@ NAME_CONFIG.NAME_FIELDS.forEach(field => {
 // ─────────────────────────────────────────────────────────────
 const poolDisplay = makeEl('div', 'dice-counter-display', DICE_CONFIG.POOL_BOX);
 poolDisplay.textContent = dicePool;
-overlay.appendChild(poolDisplay);
+scaleRoot.appendChild(poolDisplay);
 
 const poolMinus = makeEl('button', 'dice-tri-btn', DICE_CONFIG.POOL_BTN_MINUS);
 poolMinus.innerHTML = '&#9664;';
@@ -205,7 +217,7 @@ poolMinus.title = 'Remove a die';
 poolMinus.addEventListener('click', () => {
   if (dicePool > DICE_CONFIG.POOL_MIN) { dicePool--; poolDisplay.textContent = dicePool; }
 });
-overlay.appendChild(poolMinus);
+scaleRoot.appendChild(poolMinus);
 
 const poolPlus = makeEl('button', 'dice-tri-btn', DICE_CONFIG.POOL_BTN_PLUS);
 poolPlus.innerHTML = '&#9654;';
@@ -213,11 +225,11 @@ poolPlus.title = 'Add a die';
 poolPlus.addEventListener('click', () => {
   if (dicePool < DICE_CONFIG.POOL_MAX) { dicePool++; poolDisplay.textContent = dicePool; }
 });
-overlay.appendChild(poolPlus);
+scaleRoot.appendChild(poolPlus);
 
 const diffDisplay = makeEl('div', 'dice-counter-display', DICE_CONFIG.DIFF_BOX);
 diffDisplay.textContent = difficulty;
-overlay.appendChild(diffDisplay);
+scaleRoot.appendChild(diffDisplay);
 
 const diffUp = makeEl('button', 'dice-tri-btn', DICE_CONFIG.DIFF_BTN_UP);
 diffUp.innerHTML = '&#9650;';
@@ -225,7 +237,7 @@ diffUp.title = 'Increase difficulty';
 diffUp.addEventListener('click', () => {
   if (difficulty < DICE_CONFIG.DIFF_MAX) { difficulty++; diffDisplay.textContent = difficulty; }
 });
-overlay.appendChild(diffUp);
+scaleRoot.appendChild(diffUp);
 
 const diffDown = makeEl('button', 'dice-tri-btn', DICE_CONFIG.DIFF_BTN_DOWN);
 diffDown.innerHTML = '&#9660;';
@@ -233,18 +245,18 @@ diffDown.title = 'Decrease difficulty';
 diffDown.addEventListener('click', () => {
   if (difficulty > DICE_CONFIG.DIFF_MIN) { difficulty--; diffDisplay.textContent = difficulty; }
 });
-overlay.appendChild(diffDown);
+scaleRoot.appendChild(diffDown);
 
 const resultLabel = makeEl('div', 'dice-result-label', DICE_CONFIG.RESULT_BTN);
 resultLabel.textContent = '—';
-overlay.appendChild(resultLabel);
+scaleRoot.appendChild(resultLabel);
 
 const rollBtn = makeEl('button', 'dice-roll-btn', DICE_CONFIG.ROLL_BTN);
 rollBtn.textContent = 'Roll the Dice';
-overlay.appendChild(rollBtn);
+scaleRoot.appendChild(rollBtn);
 
 const resultsArea = makeEl('div', 'dice-results-area', DICE_CONFIG.RESULTS_AREA);
-overlay.appendChild(resultsArea);
+scaleRoot.appendChild(resultsArea);
 
 // ─────────────────────────────────────────────────────────────
 //  ROLL LOGIC
@@ -322,21 +334,21 @@ WEAPON_CONFIG.WEAPONS.forEach(weapon => {
   const atkBtn = document.createElement('button');
   atkBtn.classList.add('weapon-btn', 'weapon-btn--attack');
   atkBtn.textContent = weapon.label + ' Atk';
-  atkBtn.style.position     = 'absolute';
-  atkBtn.style.top          = weapon.attackBtn.top  + 'px';
-  atkBtn.style.left         = weapon.attackBtn.left + 'px';
-  atkBtn.style.width        = WEAPON_CONFIG.BTN_W   + 'px';
-  atkBtn.style.height       = WEAPON_CONFIG.BTN_H   + 'px';
+  atkBtn.style.position      = 'absolute';
+  atkBtn.style.top           = weapon.attackBtn.top  + 'px';
+  atkBtn.style.left          = weapon.attackBtn.left + 'px';
+  atkBtn.style.width         = WEAPON_CONFIG.BTN_W   + 'px';
+  atkBtn.style.height        = WEAPON_CONFIG.BTN_H   + 'px';
   atkBtn.style.pointerEvents = 'all';
 
   const dmgBtn = document.createElement('button');
   dmgBtn.classList.add('weapon-btn', 'weapon-btn--damage');
   dmgBtn.textContent = weapon.label + ' Dmg';
-  dmgBtn.style.position     = 'absolute';
-  dmgBtn.style.top          = weapon.damageBtn.top  + 'px';
-  dmgBtn.style.left         = weapon.damageBtn.left + 'px';
-  dmgBtn.style.width        = WEAPON_CONFIG.BTN_W   + 'px';
-  dmgBtn.style.height       = WEAPON_CONFIG.BTN_H   + 'px';
+  dmgBtn.style.position      = 'absolute';
+  dmgBtn.style.top           = weapon.damageBtn.top  + 'px';
+  dmgBtn.style.left          = weapon.damageBtn.left + 'px';
+  dmgBtn.style.width         = WEAPON_CONFIG.BTN_W   + 'px';
+  dmgBtn.style.height        = WEAPON_CONFIG.BTN_H   + 'px';
   dmgBtn.style.pointerEvents = 'all';
 
   atkBtn.addEventListener('click', () => {
@@ -352,8 +364,8 @@ WEAPON_CONFIG.WEAPONS.forEach(weapon => {
     dmgBtn.classList.remove('weapon-btn--bonus');
   });
 
-  overlay.appendChild(atkBtn);
-  overlay.appendChild(dmgBtn);
+  scaleRoot.appendChild(atkBtn);
+  scaleRoot.appendChild(dmgBtn);
 });
 
 // ─────────────────────────────────────────────────────────────
@@ -386,7 +398,7 @@ function loadState() {
       if (!npcStates[npcId]) return;
       boxes.forEach((val, i) => {
         npcStates[npcId][i] = val;
-        const group = overlay.querySelector(`[data-npc="${npcId}"]`);
+        const group = scaleRoot.querySelector(`[data-npc="${npcId}"]`);
         if (group) {
           const box = group.querySelectorAll('.health-box')[i];
           if (box) box.dataset.state = String(val);
