@@ -1,1 +1,281 @@
-f
+/* ── Reset & root ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #111;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  overflow-x: hidden;   /* no horizontal scroll if anything overflows */
+}
+
+#tracker-wrap {
+  position: relative;
+  width: 100vw;         /* always fills the viewport width */
+}
+
+#bg {
+  display: block;
+  width: 100%;          /* fills #tracker-wrap = fills the screen */
+  height: auto;         /* maintains aspect ratio; page scrolls vertically if tall */
+  user-select: none;
+  touch-action: pan-y;  /* allows vertical scroll, blocks pinch-zoom on the image */
+}
+
+/* ── Overlay sits exactly on top of the image ────────────── */
+#overlay {
+  position: absolute;
+  inset: 0;                /* top/right/bottom/left: 0 */
+  pointer-events: none;    /* overlay itself is click-through */
+}
+
+/* ── One NPC group (7 health boxes stacked vertically) ───── */
+.npc-group {
+  position: absolute;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--box-gap, 4px);   /* gap between boxes – tune once */
+}
+
+/* ── Individual health box ───────────────────────────────── */
+.health-box {
+  width:  var(--box-w, 22px);   /* tune these two variables */
+  height: var(--box-h, 22px);   /* to match your PNG squares */
+  cursor: pointer;
+  pointer-events: all;
+  position: relative;
+  /* Uncomment the line below while positioning to see the grid */
+  outline: 1px solid rgba(255,0,0,0.4); */
+  touch-action: manipulation;  /* prevents the 300ms double-tap zoom on interactive elements */
+}
+
+/* ── The four damage-state glyphs ────────────────────────── */
+.health-box::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(var(--box-w, 22px) * 1);
+  line-height: 1;
+}
+
+/* State 0 – empty: nothing shown */
+.health-box[data-state="0"]::after { content: ''; }
+
+/* State 1 – bashing (slash /) */
+.health-box[data-state="1"]::after {
+  content: '/';
+  color: #222;
+  font-weight: 900;
+  font-family: Arial, sans-serif;
+}
+
+/* State 2 – lethal (cross ✕) */
+.health-box[data-state="2"]::after {
+  content: '✕';
+  color: #222;
+  font-weight: 900;
+  font-family: Arial, sans-serif;
+}
+
+/* State 3 – aggravated (filled black square) */
+.health-box[data-state="3"]::after {
+  content: '';
+  background: #111;
+  border-radius: 1px;
+  inset: 10%;   /* slight inset so it fits cleanly inside the PNG box */
+}
+
+/* ── NPC Name fields ─────────────────────────────────────── */
+.npc-name {
+  position: absolute;
+  pointer-events: all;
+
+  font-family: 'Special Elite', cursive;
+  font-size: 14px;
+  text-align: center;
+
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #222;           /* text colour — adjust to suit your PNG */
+
+  padding: 0;
+  cursor: text;
+  touch-action: manipulation;
+
+  /* Remove browser default input styling on iOS */
+  -webkit-appearance: none;
+  border-radius: 0;
+}
+
+.npc-name::placeholder {
+  color: transparent;    /* hide placeholder unless you want one */
+}
+
+/* ── Dice counter displays ───────────────────────────────────── */
+.dice-counter-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Special Elite', cursive;
+  font-size: 46px;
+  color: #222;
+  background: transparent;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Triangle buttons (pool +/− and diff ▲▼) ────────────────── */
+.dice-tri-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: transparent;
+  font-size: 50px;
+  cursor: pointer;
+  touch-action: manipulation;
+  padding: 0;
+  user-select: none;
+}
+
+.dice-tri-btn:active {
+  opacity: 0.5;
+}
+
+/* ── Roll button ─────────────────────────────────────────────── */
+.dice-roll-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Special Elite', cursive;
+  font-size: 15px;
+  background: transparent;
+  color: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  touch-action: manipulation;
+  letter-spacing: 0.04em;
+}
+
+.dice-roll-btn:active {
+  background: #2f2f2f;
+}
+
+/* ── Result label ────────────────────────────────────────────── */
+.dice-result-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Special Elite', cursive;
+  font-size: 22px;
+  background: transparent;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+  user-select: none;
+
+  /* default / no roll yet */
+  color: #555;
+}
+
+.dice-result-label[data-outcome="success"] { color: #42c546; }
+.dice-result-label[data-outcome="failure"] { color: #ffffff; }
+.dice-result-label[data-outcome="botch"]   { color: #ed3330; }
+
+/* ── Results area ────────────────────────────────────────────── */
+.dice-results-area {
+  background: transparent;
+  border-radius: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 6px;
+  padding: 10px;
+  pointer-events: none;
+}
+/* ── Individual dice ─────────────────────────────────────────── */
+.die {
+  width: 42px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  user-select: none;
+  flex-shrink: 0;
+}
+
+/* Outer hex = the border color */
+.die--success     { background: #4caf50; }
+.die--failure     { background: #757575; }
+.die--critsuccess { background: #ce93d8; }
+.die--critfail    { background: #b01a18; }
+
+/* Inner hex = the dark fill, slightly smaller to reveal border */
+.die-inner {
+  position: absolute;
+  /* Inset controls border thickness — increase for thicker border */
+  inset: 3px;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.die--success     .die-inner { background: #26512c; }
+.die--failure     .die-inner { background: #2e2e2e; }
+.die--critsuccess .die-inner { background: #411159; }
+.die--critfail    .die-inner { background: #560f0f; }
+
+.die span {
+  position: relative;
+  z-index: 1;
+  font-family: 'Special Elite', cursive;
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* ── Weapon buttons ──────────────────────────────────────────── */
+.weapon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Special Elite', cursive;
+  font-size: 11px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  touch-action: manipulation;
+  letter-spacing: 0.03em;
+  user-select: none;
+}
+
+.weapon-btn:active {
+  opacity: 0.6;
+}
+
+.weapon-btn--attack {
+  background: transparent;
+  color: transparent;
+}
+
+.weapon-btn--damage {
+  background: transparent;
+  color: transparent;
+}
+
+/* Damage button glows when bonus dice are loaded */
+.weapon-btn--bonus {
+  background: #b6811074;
+  color: transparent;
+  box-shadow: 0 0 6px rgba(255, 200, 50, 0.6);
+}
