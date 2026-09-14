@@ -47,11 +47,15 @@ body {
 /* ── Health box ───────────────────────────────────────────── */
 /* width, height, and marginBottom are now set by JS via px() */
 .health-box {
+  width:         calc(var(--scale) * 24px);
+  height:        calc(var(--scale) * 24px);
+  margin-bottom: calc(var(--scale) * 4px);
   cursor: pointer;
   pointer-events: all;
   position: relative;
   touch-action: manipulation;
 }
+
 
 .health-box::after {
   content: '';
@@ -60,7 +64,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 75%;
+  font-size: calc(var(--scale) * 18px);
   line-height: 1;
 }
 
