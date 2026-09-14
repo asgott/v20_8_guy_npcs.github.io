@@ -113,11 +113,23 @@ const WEAPON_CONFIG = {
 };
 
 // ─────────────────────────────────────────────────────────────
-//  CSS VARIABLES
+//  PERCENTAGE HELPERS
 // ─────────────────────────────────────────────────────────────
-document.documentElement.style.setProperty('--box-w',   CONFIG.BOX_W   + 'px');
-document.documentElement.style.setProperty('--box-h',   CONFIG.BOX_H   + 'px');
-document.documentElement.style.setProperty('--box-gap', CONFIG.BOX_GAP + 'px');
+function px(val, axis) {
+  return (val / (axis === 'x' ? PNG_W : PNG_H) * 100) + '%';
+}
+
+function makeEl(tag, cls, box) {
+  const el = document.createElement(tag);
+  el.classList.add(cls);
+  el.style.position = 'absolute';
+  el.style.top      = px(box.top, 'y');
+  el.style.left     = px(box.left, 'x');
+  if (box.w) el.style.width  = px(box.w, 'x');
+  if (box.h) el.style.height = px(box.h, 'y');
+  el.style.pointerEvents = 'all';
+  return el;
+}
 
 // ─────────────────────────────────────────────────────────────
 //  STATE
@@ -133,26 +145,6 @@ WEAPON_CONFIG.WEAPONS.forEach(w => { pendingBonus[w.id] = 0; });
 //  OVERLAY
 // ─────────────────────────────────────────────────────────────
 const overlay = document.getElementById('overlay');
-
-// ── Percentage helpers ────────────────────────────────────────
-// All pixel values were measured against the natural PNG dimensions.
-// Converting to % makes them scale correctly on any screen size.
-function px(val, axis) {
-  return (val / (axis === 'x' ? PNG_W : PNG_H) * 100) + '%';
-}
-
-// ── Helper: create a positioned element ──────────────────────
-function makeEl(tag, cls, box) {
-  const el = document.createElement(tag);
-  el.classList.add(cls);
-  el.style.position = 'absolute';
-  el.style.top      = px(box.top, 'y');
-  el.style.left     = px(box.left, 'x');
-  if (box.w) el.style.width  = px(box.w, 'x');
-  if (box.h) el.style.height = px(box.h, 'y');
-  el.style.pointerEvents = 'all';
-  return el;
-}
 
 // ─────────────────────────────────────────────────────────────
 //  BUILD: HEALTH BOXES
@@ -172,6 +164,11 @@ CONFIG.NPC_GROUPS.forEach(npc => {
     box.dataset.state = '0';
     box.dataset.index = i;
     box.title = `${npc.label} – box ${i + 1}`;
+
+    // ── FIX: scale width, height, and gap via px() ──
+    box.style.width        = px(CONFIG.BOX_W,   'x');
+    box.style.height       = px(CONFIG.BOX_H,   'y');
+    box.style.marginBottom = px(CONFIG.BOX_GAP, 'y');
 
     box.addEventListener('click', () => {
       const current = npcStates[npc.id][i];
