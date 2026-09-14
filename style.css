@@ -192,8 +192,8 @@ body {
 
 /* ── Dice ─────────────────────────────────────────────────── */
 .die {
-  width: 36px;
-  height: 40px;
+  width: 18px;
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
