@@ -144,24 +144,24 @@ WEAPON_CONFIG.WEAPONS.forEach(w => { pendingBonus[w.id] = 0; });
 // ─────────────────────────────────────────────────────────────
 //  OVERLAY
 // ─────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────
+//  OVERLAY
+// ─────────────────────────────────────────────────────────────
 const overlay = document.getElementById('overlay');
-
 const bgImg = document.getElementById('bg');
 
 function applyScale() {
-  const scale = bgImg.clientWidth / PNG_W;
-  document.documentElement.style.setProperty('--scale', scale);
+  const w = bgImg.clientWidth;
+  if (w === 0) return;
+  document.documentElement.style.setProperty('--scale', w / PNG_W);
 }
 
 const ro = new ResizeObserver(applyScale);
 ro.observe(bgImg);
 
-// wait for image to have real dimensions before first scale
-if (bgImg.complete) {
-  applyScale();
-} else {
-  bgImg.addEventListener('load', applyScale);
-}
+bgImg.addEventListener('load', applyScale);
+window.addEventListener('load', applyScale);
+setTimeout(applyScale, 0);
 // ─────────────────────────────────────────────────────────────
 //  BUILD: HEALTH BOXES
 // ─────────────────────────────────────────────────────────────
