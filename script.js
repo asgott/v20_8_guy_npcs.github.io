@@ -13,14 +13,14 @@ const CONFIG = {
   BOX_GAP:  4,
 
   NPC_GROUPS: [
-    { id: 'npc1', label: 'NPC 1', top:  47,    left:  151   },
-    { id: 'npc2', label: 'NPC 2', top:  47,    left:  315   },
-    { id: 'npc3', label: 'NPC 3', top:  47,    left:  478.5 },
-    { id: 'npc4', label: 'NPC 4', top:  47,    left:  642   },
-    { id: 'npc5', label: 'NPC 5', top:  289.5, left:  151   },
-    { id: 'npc6', label: 'NPC 6', top:  289.5, left:  315   },
-    { id: 'npc7', label: 'NPC 7', top:  289.5, left:  478.5 },
-    { id: 'npc8', label: 'NPC 8', top:  289.5, left:  642   },
+    { id: 'npc1', label: 'NPC 1', top:  98,    left:  315   },
+    { id: 'npc2', label: 'NPC 2', top:  98,    left:  661   },
+    { id: 'npc3', label: 'NPC 3', top:  98,    left:  1006 },
+    { id: 'npc4', label: 'NPC 4', top:  98,    left:  1350   },
+    { id: 'npc5', label: 'NPC 5', top:  606, left:  315   },
+    { id: 'npc6', label: 'NPC 6', top:  606, left:  661   },
+    { id: 'npc7', label: 'NPC 7', top:  606, left:  1006 },
+    { id: 'npc8', label: 'NPC 8', top:  606, left:  1350   },
   ],
 
   BOXES_PER_NPC: 7,
@@ -46,17 +46,17 @@ const NAME_CONFIG = {
 
 // ── DICE CONFIG ───────────────────────────────────────────────
 const DICE_CONFIG = {
-  POOL_BOX:       { top: 721, left: 270,   w: 48,  h: 48 },
-  POOL_BTN_MINUS: { top: 717, left: 190,   w: 36,  h: 48 },
-  POOL_BTN_PLUS:  { top: 717, left: 370,   w: 36,  h: 48 },
+  POOL_BOX:       { top: 1541, left: 599,   w: 48,  h: 48 },
+  POOL_BTN_MINUS: { top: 1537, left: 428,   w: 36,  h: 48 },
+  POOL_BTN_PLUS:  { top: 1537, left: 790,   w: 36,  h: 48 },
 
-  DIFF_BOX:       { top: 720, left: 482,   w: 48,  h: 48 },
-  DIFF_BTN_UP:    { top: 710, left: 540,   w: 26,  h: 14 },
-  DIFF_BTN_DOWN:  { top: 751, left: 540,   w: 26,  h: 14 },
+  DIFF_BOX:       { top: 1540, left: 1041,   w: 48,  h: 48 },
+  DIFF_BTN_UP:    { top: 1510, left: 1154,   w: 26,  h: 14 },
+  DIFF_BTN_DOWN:  { top: 1585, left: 1154,   w: 26,  h: 14 },
 
   ROLL_BTN:       { top: 1696, left: 780,   w: 430, h: 100 },
-  RESULT_BTN:     { top: 805, left: 150.5, w: 200, h: 49 },
-  RESULTS_AREA:   { top: 871, left: 161,   w: 422, h: 115 },
+  RESULT_BTN:     { top: 1698, left: 312, w: 430, h: 100 },
+  RESULTS_AREA:   { top: 1842, left: 315,   w: 891, h: 248 },
 
   POOL_MIN:  1,
   POOL_MAX: 20,
@@ -69,45 +69,45 @@ const WEAPON_CONFIG = {
   ATTACK_DIFFICULTY: 6,
   DAMAGE_DIFFICULTY: 6,
 
-  BTN_W: 45,
-  BTN_H: 45,
+  BTN_W: 89,
+  BTN_H: 89,
 
   WEAPONS: [
     {
       id: 'knife',   label: 'Knife',
       attackDice: 4, damageDice: 3,
-      attackBtn: { top: 574, left:  34    },
-      damageBtn: { top: 574, left:  84    },
+      attackBtn: { top: 1212, left:  75    },
+      damageBtn: { top: 1212, left:  179   },
     },
     {
       id: 'pistol',  label: 'Pistol',
       attackDice: 5, damageDice: 4,
-      attackBtn: { top: 574, left:  143   },
-      damageBtn: { top: 574, left:  192   },
+      attackBtn: { top: 1212, left:  304   },
+      damageBtn: { top: 1212, left:  408   },
     },
     {
       id: 'rifle',   label: 'Rifle',
       attackDice: 5, damageDice: 6,
-      attackBtn: { top: 574, left:  251.5 },
-      damageBtn: { top: 574, left:  301   },
+      attackBtn: { top: 1212, left:  532.5 },
+      damageBtn: { top: 1212, left:  636.5 },
     },
     {
       id: 'smg',     label: 'SMG',
       attackDice: 5, damageDice: 5,
-      attackBtn: { top: 574, left:  360   },
-      damageBtn: { top: 574, left:  410   },
+      attackBtn: { top: 1212, left:  761.5   },
+      damageBtn: { top: 1212, left:  865.5   },
     },
     {
       id: 'shotgun', label: 'Shotgun',
       attackDice: 5, damageDice: 7,
-      attackBtn: { top: 574, left:  469   },
-      damageBtn: { top: 574, left:  519   },
+      attackBtn: { top: 1212, left:  990   },
+      damageBtn: { top: 1212, left:  1094  },
     },
     {
       id: 'baton',   label: 'Baton',
       attackDice: 4, damageDice: 4,
-      attackBtn: { top: 574, left:  578.5 },
-      damageBtn: { top: 574, left:  628   },
+      attackBtn: { top: 1212, left:  1221 },
+      damageBtn: { top: 1212, left:  1325 },
     },
   ],
 };
