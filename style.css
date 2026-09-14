@@ -118,7 +118,7 @@ body {
   align-items: center;
   justify-content: center;
   font-family: 'Special Elite', cursive;
-  font-size: 36px;
+  font-size: 56px;
   color: #222;
   background: transparent;
   pointer-events: none;
@@ -166,7 +166,7 @@ body {
   align-items: center;
   justify-content: center;
   font-family: 'Special Elite', cursive;
-  font-size: 25px;
+  font-size: 45px;
   background: #111;
   border-radius: 4px;
   letter-spacing: 0.04em;
