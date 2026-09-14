@@ -35,16 +35,6 @@ body {
   overflow: hidden;
 }
 
-#scale-root {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 1488px;
-  height: 2266px;
-  transform-origin: top left;
-  pointer-events: none;
-}
-
 /* ── NPC group ────────────────────────────────────────────── */
 .npc-group {
   position: absolute;
