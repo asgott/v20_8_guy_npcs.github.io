@@ -54,7 +54,7 @@ const DICE_CONFIG = {
   DIFF_BTN_UP:    { top: 710, left: 540,   w: 26,  h: 14 },
   DIFF_BTN_DOWN:  { top: 751, left: 540,   w: 26,  h: 14 },
 
-  ROLL_BTN:       { top: 808, left: 370,   w: 200, h: 44 },
+  ROLL_BTN:       { top: 1696, left: 780,   w: 430, h: 100 },
   RESULT_BTN:     { top: 805, left: 150.5, w: 200, h: 49 },
   RESULTS_AREA:   { top: 871, left: 161,   w: 422, h: 115 },
 
