@@ -146,6 +146,22 @@ WEAPON_CONFIG.WEAPONS.forEach(w => { pendingBonus[w.id] = 0; });
 // ─────────────────────────────────────────────────────────────
 const overlay = document.getElementById('overlay');
 
+const bgImg = document.getElementById('bg');
+
+function applyScale() {
+  const scale = bgImg.clientWidth / PNG_W;
+  document.documentElement.style.setProperty('--scale', scale);
+}
+
+const ro = new ResizeObserver(applyScale);
+ro.observe(bgImg);
+
+// wait for image to have real dimensions before first scale
+if (bgImg.complete) {
+  applyScale();
+} else {
+  bgImg.addEventListener('load', applyScale);
+}
 // ─────────────────────────────────────────────────────────────
 //  BUILD: HEALTH BOXES
 // ─────────────────────────────────────────────────────────────
@@ -166,9 +182,6 @@ CONFIG.NPC_GROUPS.forEach(npc => {
     box.title = `${npc.label} – box ${i + 1}`;
 
     // ── FIX: scale width, height, and gap via px() ──
-    box.style.width        = px(CONFIG.BOX_W,   'x');
-    box.style.height       = px(CONFIG.BOX_H,   'y');
-    box.style.marginBottom = px(CONFIG.BOX_GAP, 'y');
 
     box.addEventListener('click', () => {
       const current = npcStates[npc.id][i];
