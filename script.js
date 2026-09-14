@@ -136,10 +136,11 @@ scaleRoot.id = 'scale-root';
 overlay.appendChild(scaleRoot);  // scaleRoot goes INTO overlay, not into itself
 
 function applyScale() {
-  const scale = overlay.offsetWidth / 1488;  // 1488 = natural PNG width in px
+  const scale = overlay.offsetWidth / 1488;
   scaleRoot.style.transform = `scale(${scale})`;
+  // Force overlay to match the scaled height so it doesn't overflow
+  overlay.style.height = (2266 * scale) + 'px';
 }
-
 applyScale();
 window.addEventListener('resize', applyScale);
 
