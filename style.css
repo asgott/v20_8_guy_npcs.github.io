@@ -47,9 +47,9 @@ body {
 /* ── Health box ───────────────────────────────────────────── */
 /* width, height, and marginBottom are now set by JS via px() */
 .health-box {
-  width:         calc(var(--scale) * 24px);
-  height:        calc(var(--scale) * 24px);
-  margin-bottom: calc(var(--scale) * 4px);
+  width:         calc(var(--scale) * 54px);
+  height:        calc(var(--scale) * 54px);
+  margin-bottom: calc(var(--scale) * 5px);
   cursor: pointer;
   pointer-events: all;
   position: relative;
@@ -64,7 +64,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(var(--scale) * 18px);
+  font-size: calc(var(--scale) * 54px);
   line-height: 1;
 }
 
@@ -118,7 +118,7 @@ body {
   align-items: center;
   justify-content: center;
   font-family: 'Special Elite', cursive;
-  font-size: 26px;
+  font-size: 36px;
   color: #222;
   background: transparent;
   pointer-events: none;
@@ -132,8 +132,8 @@ body {
   justify-content: center;
   background: transparent;
   border: none;
-  color: #222;
-  font-size: 20px;
+  color: transparent;
+  font-size: 40px;
   cursor: pointer;
   touch-action: manipulation;
   padding: 0;
@@ -149,8 +149,8 @@ body {
   justify-content: center;
   font-family: 'Special Elite', cursive;
   font-size: 15px;
-  background: #2a2a2a;
-  color: #e8e0d0;
+  background: transparent;
+  color: transparent;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -166,7 +166,7 @@ body {
   align-items: center;
   justify-content: center;
   font-family: 'Special Elite', cursive;
-  font-size: 15px;
+  font-size: 25px;
   background: #111;
   border-radius: 4px;
   letter-spacing: 0.04em;
@@ -249,17 +249,17 @@ body {
 .weapon-btn:active { opacity: 0.6; }
 
 .weapon-btn--attack {
-  background: #1a1a2e;
-  color: #a0a8c0;
+  background: transparent;
+  color: transparent;
 }
 
 .weapon-btn--damage {
-  background: #2e1a1a;
-  color: #c0a0a0;
+  background: transparent;
+  color: transparent;
 }
 
 .weapon-btn--bonus {
-  background: #3a2800;
-  color: #ffd54f;
+  background: #dc9d1768;
+  color: transparent;
   box-shadow: 0 0 6px rgba(255, 200, 50, 0.6);
 }
