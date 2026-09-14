@@ -24,7 +24,7 @@ body {
   touch-action: pan-y;
 }
 
-/* ── Overlay: matches image exactly, scales with it ──────── */
+/* ── Overlay ──────────────────────────────────────────────── */
 #overlay {
   position: absolute;
   top: 0;
@@ -41,13 +41,12 @@ body {
   pointer-events: none;
   display: flex;
   flex-direction: column;
-  gap: var(--box-gap, 4px);
+  /* gap removed — marginBottom on each box handles spacing */
 }
 
 /* ── Health box ───────────────────────────────────────────── */
+/* width, height, and marginBottom are now set by JS via px() */
 .health-box {
-  width:  var(--box-w, 28px);
-  height: var(--box-h, 28px);
   cursor: pointer;
   pointer-events: all;
   position: relative;
@@ -61,7 +60,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(var(--box-w, 28px) * 0.75);
+  font-size: 75%;
   line-height: 1;
 }
 
