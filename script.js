@@ -29,18 +29,18 @@ const CONFIG = {
 
 // ── NAME CONFIG ───────────────────────────────────────────────
 const NAME_CONFIG = {
-  BOX_W:  130,
-  BOX_H:   25,
+  BOX_W:  274,
+  BOX_H:   45,
 
   NAME_FIELDS: [
-    { id: 'name1', top:  240, left:  43  },
-    { id: 'name2', top:  240, left:  206 },
-    { id: 'name3', top:  240, left:  371 },
-    { id: 'name4', top:  240, left:  535 },
-    { id: 'name5', top:  485, left:  43  },
-    { id: 'name6', top:  485, left:  206 },
-    { id: 'name7', top:  485, left:  371 },
-    { id: 'name8', top:  485, left:  535 },
+    { id: 'name1', top:  509, left:  90  },
+    { id: 'name2', top:  509, left:  435 },
+    { id: 'name3', top:  509, left:  781 },
+    { id: 'name4', top:  509, left:  1125 },
+    { id: 'name5', top:  1021, left:  90  },
+    { id: 'name6', top:  1021, left:  435 },
+    { id: 'name7', top:  1021, left:  781 },
+    { id: 'name8', top:  1021, left:  1125 },
   ],
 };
 
