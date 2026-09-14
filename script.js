@@ -3,6 +3,9 @@
 //  4-state cycle per box: 0=empty  1=slash  2=cross  3=filled
 // ─────────────────────────────────────────────────────────────
 
+const PNG_W = 1488;
+const PNG_H = 2266;
+
 // ── HEALTH CONFIG ─────────────────────────────────────────────
 const CONFIG = {
   BOX_W:   24,
@@ -127,32 +130,26 @@ const pendingBonus = {};
 WEAPON_CONFIG.WEAPONS.forEach(w => { pendingBonus[w.id] = 0; });
 
 // ─────────────────────────────────────────────────────────────
-//  OVERLAY + SCALE ROOT
+//  OVERLAY
 // ─────────────────────────────────────────────────────────────
 const overlay = document.getElementById('overlay');
 
-const scaleRoot = document.createElement('div');
-scaleRoot.id = 'scale-root';
-overlay.appendChild(scaleRoot);  // scaleRoot goes INTO overlay, not into itself
-
-function applyScale() {
-  const scale = overlay.offsetWidth / 1488;
-  scaleRoot.style.transform = `scale(${scale})`;
-  // Force overlay to match the scaled height so it doesn't overflow
-  overlay.style.height = (2266 * scale) + 'px';
+// ── Percentage helpers ────────────────────────────────────────
+// All pixel values were measured against the natural PNG dimensions.
+// Converting to % makes them scale correctly on any screen size.
+function px(val, axis) {
+  return (val / (axis === 'x' ? PNG_W : PNG_H) * 100) + '%';
 }
-applyScale();
-window.addEventListener('resize', applyScale);
 
-// ── Helper ────────────────────────────────────────────────────
+// ── Helper: create a positioned element ──────────────────────
 function makeEl(tag, cls, box) {
   const el = document.createElement(tag);
   el.classList.add(cls);
   el.style.position = 'absolute';
-  el.style.top      = box.top  + 'px';
-  el.style.left     = box.left + 'px';
-  if (box.w) el.style.width  = box.w + 'px';
-  if (box.h) el.style.height = box.h + 'px';
+  el.style.top      = px(box.top, 'y');
+  el.style.left     = px(box.left, 'x');
+  if (box.w) el.style.width  = px(box.w, 'x');
+  if (box.h) el.style.height = px(box.h, 'y');
   el.style.pointerEvents = 'all';
   return el;
 }
@@ -166,8 +163,8 @@ CONFIG.NPC_GROUPS.forEach(npc => {
   const group = document.createElement('div');
   group.classList.add('npc-group');
   group.dataset.npc = npc.id;
-  group.style.top  = npc.top  + 'px';
-  group.style.left = npc.left + 'px';
+  group.style.top  = px(npc.top,  'y');
+  group.style.left = px(npc.left, 'x');
 
   for (let i = 0; i < CONFIG.BOXES_PER_NPC; i++) {
     const box = document.createElement('div');
@@ -186,7 +183,7 @@ CONFIG.NPC_GROUPS.forEach(npc => {
     group.appendChild(box);
   }
 
-  scaleRoot.appendChild(group);
+  overlay.appendChild(group);
 });
 
 // ─────────────────────────────────────────────────────────────
@@ -198,11 +195,11 @@ NAME_CONFIG.NAME_FIELDS.forEach(field => {
   input.classList.add('npc-name');
   input.dataset.id = field.id;
   input.placeholder = '—';
-  input.style.top    = field.top    + 'px';
-  input.style.left   = field.left   + 'px';
-  input.style.width  = NAME_CONFIG.BOX_W + 'px';
-  input.style.height = NAME_CONFIG.BOX_H + 'px';
-  scaleRoot.appendChild(input);
+  input.style.top    = px(field.top,        'y');
+  input.style.left   = px(field.left,       'x');
+  input.style.width  = px(NAME_CONFIG.BOX_W, 'x');
+  input.style.height = px(NAME_CONFIG.BOX_H, 'y');
+  overlay.appendChild(input);
 });
 
 // ─────────────────────────────────────────────────────────────
@@ -210,7 +207,7 @@ NAME_CONFIG.NAME_FIELDS.forEach(field => {
 // ─────────────────────────────────────────────────────────────
 const poolDisplay = makeEl('div', 'dice-counter-display', DICE_CONFIG.POOL_BOX);
 poolDisplay.textContent = dicePool;
-scaleRoot.appendChild(poolDisplay);
+overlay.appendChild(poolDisplay);
 
 const poolMinus = makeEl('button', 'dice-tri-btn', DICE_CONFIG.POOL_BTN_MINUS);
 poolMinus.innerHTML = '&#9664;';
@@ -218,7 +215,7 @@ poolMinus.title = 'Remove a die';
 poolMinus.addEventListener('click', () => {
   if (dicePool > DICE_CONFIG.POOL_MIN) { dicePool--; poolDisplay.textContent = dicePool; }
 });
-scaleRoot.appendChild(poolMinus);
+overlay.appendChild(poolMinus);
 
 const poolPlus = makeEl('button', 'dice-tri-btn', DICE_CONFIG.POOL_BTN_PLUS);
 poolPlus.innerHTML = '&#9654;';
@@ -226,11 +223,11 @@ poolPlus.title = 'Add a die';
 poolPlus.addEventListener('click', () => {
   if (dicePool < DICE_CONFIG.POOL_MAX) { dicePool++; poolDisplay.textContent = dicePool; }
 });
-scaleRoot.appendChild(poolPlus);
+overlay.appendChild(poolPlus);
 
 const diffDisplay = makeEl('div', 'dice-counter-display', DICE_CONFIG.DIFF_BOX);
 diffDisplay.textContent = difficulty;
-scaleRoot.appendChild(diffDisplay);
+overlay.appendChild(diffDisplay);
 
 const diffUp = makeEl('button', 'dice-tri-btn', DICE_CONFIG.DIFF_BTN_UP);
 diffUp.innerHTML = '&#9650;';
@@ -238,7 +235,7 @@ diffUp.title = 'Increase difficulty';
 diffUp.addEventListener('click', () => {
   if (difficulty < DICE_CONFIG.DIFF_MAX) { difficulty++; diffDisplay.textContent = difficulty; }
 });
-scaleRoot.appendChild(diffUp);
+overlay.appendChild(diffUp);
 
 const diffDown = makeEl('button', 'dice-tri-btn', DICE_CONFIG.DIFF_BTN_DOWN);
 diffDown.innerHTML = '&#9660;';
@@ -246,18 +243,18 @@ diffDown.title = 'Decrease difficulty';
 diffDown.addEventListener('click', () => {
   if (difficulty > DICE_CONFIG.DIFF_MIN) { difficulty--; diffDisplay.textContent = difficulty; }
 });
-scaleRoot.appendChild(diffDown);
+overlay.appendChild(diffDown);
 
 const resultLabel = makeEl('div', 'dice-result-label', DICE_CONFIG.RESULT_BTN);
 resultLabel.textContent = '—';
-scaleRoot.appendChild(resultLabel);
+overlay.appendChild(resultLabel);
 
 const rollBtn = makeEl('button', 'dice-roll-btn', DICE_CONFIG.ROLL_BTN);
 rollBtn.textContent = 'Roll the Dice';
-scaleRoot.appendChild(rollBtn);
+overlay.appendChild(rollBtn);
 
 const resultsArea = makeEl('div', 'dice-results-area', DICE_CONFIG.RESULTS_AREA);
-scaleRoot.appendChild(resultsArea);
+overlay.appendChild(resultsArea);
 
 // ─────────────────────────────────────────────────────────────
 //  ROLL LOGIC
@@ -336,20 +333,20 @@ WEAPON_CONFIG.WEAPONS.forEach(weapon => {
   atkBtn.classList.add('weapon-btn', 'weapon-btn--attack');
   atkBtn.textContent = weapon.label + ' Atk';
   atkBtn.style.position      = 'absolute';
-  atkBtn.style.top           = weapon.attackBtn.top  + 'px';
-  atkBtn.style.left          = weapon.attackBtn.left + 'px';
-  atkBtn.style.width         = WEAPON_CONFIG.BTN_W   + 'px';
-  atkBtn.style.height        = WEAPON_CONFIG.BTN_H   + 'px';
+  atkBtn.style.top           = px(weapon.attackBtn.top,  'y');
+  atkBtn.style.left          = px(weapon.attackBtn.left, 'x');
+  atkBtn.style.width         = px(WEAPON_CONFIG.BTN_W,   'x');
+  atkBtn.style.height        = px(WEAPON_CONFIG.BTN_H,   'y');
   atkBtn.style.pointerEvents = 'all';
 
   const dmgBtn = document.createElement('button');
   dmgBtn.classList.add('weapon-btn', 'weapon-btn--damage');
   dmgBtn.textContent = weapon.label + ' Dmg';
   dmgBtn.style.position      = 'absolute';
-  dmgBtn.style.top           = weapon.damageBtn.top  + 'px';
-  dmgBtn.style.left          = weapon.damageBtn.left + 'px';
-  dmgBtn.style.width         = WEAPON_CONFIG.BTN_W   + 'px';
-  dmgBtn.style.height        = WEAPON_CONFIG.BTN_H   + 'px';
+  dmgBtn.style.top           = px(weapon.damageBtn.top,  'y');
+  dmgBtn.style.left          = px(weapon.damageBtn.left, 'x');
+  dmgBtn.style.width         = px(WEAPON_CONFIG.BTN_W,   'x');
+  dmgBtn.style.height        = px(WEAPON_CONFIG.BTN_H,   'y');
   dmgBtn.style.pointerEvents = 'all';
 
   atkBtn.addEventListener('click', () => {
@@ -365,8 +362,8 @@ WEAPON_CONFIG.WEAPONS.forEach(weapon => {
     dmgBtn.classList.remove('weapon-btn--bonus');
   });
 
-  scaleRoot.appendChild(atkBtn);
-  scaleRoot.appendChild(dmgBtn);
+  overlay.appendChild(atkBtn);
+  overlay.appendChild(dmgBtn);
 });
 
 // ─────────────────────────────────────────────────────────────
@@ -399,7 +396,7 @@ function loadState() {
       if (!npcStates[npcId]) return;
       boxes.forEach((val, i) => {
         npcStates[npcId][i] = val;
-        const group = scaleRoot.querySelector(`[data-npc="${npcId}"]`);
+        const group = overlay.querySelector(`[data-npc="${npcId}"]`);
         if (group) {
           const box = group.querySelectorAll('.health-box')[i];
           if (box) box.dataset.state = String(val);
@@ -432,22 +429,3 @@ document.querySelectorAll('.npc-name').forEach(input => {
 });
 
 loadState();
-
-// TEMPORARY DEBUG — remove when done
-const debugEl = document.createElement('div');
-debugEl.style.cssText = `
-  position: fixed; bottom: 10px; left: 10px; z-index: 9999;
-  background: rgba(0,0,0,0.8); color: lime; font-size: 13px;
-  font-family: monospace; padding: 6px 10px; border-radius: 4px;
-`;
-document.body.appendChild(debugEl);
-
-function updateDebug() {
-  const imgEl = document.getElementById('bg');
-  debugEl.textContent =
-    `overlay px width: ${overlay.offsetWidth} | ` +
-    `img natural: ${imgEl.naturalWidth}×${imgEl.naturalHeight} | ` +
-    `scale: ${(overlay.offsetWidth / imgEl.naturalWidth).toFixed(4)}`;
-}
-updateDebug();
-window.addEventListener('resize', updateDebug);
